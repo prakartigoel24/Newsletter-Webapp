@@ -1,16 +1,17 @@
+require('dotenv').config()
 const { json } = require("body-parser");
 const bodyParser = require("body-parser");
 const express = require("express");
 const request = require("request");
 const https = require("https");
-const { response } = require("express");
+const  response  = require("express");
 
 const app = express();
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static("public"));
 
-
-
+const LIST_ID = process.env.LIST_ID
+const API_KEY = process.env.API_KEY
 app.get("/",function(req, res){
       res.sendFile(__dirname + "/signup.html")
 });
@@ -34,10 +35,12 @@ app.post("/",function(req,res){
         ]
     }
     const jsonData = JSON.stringify(data);
-    const url = "https://us21.api.mailchimp.com/3.0/lists/71f24ed5e8";
+
+    const url = "https://us21.api.mailchimp.com/3.0/lists/" + LIST_ID;
+    console.log(url);
     const options = {
         method :"POST",
-        auth: "prakarti:acc2946992c7f2aa3631e3e11650fd0c-us21"
+        auth: "prakarti:"+API_KEY
     }
     const request = https.request(url,options,function(response){
         
@@ -61,16 +64,8 @@ app.post("/",function(req,res){
 app.post("/failure",function(req,res){
     res.redirect("/");
 })
-{
 
-}
 app.listen(process.env.PORT || 3000, function(){
-    console.log("Server running on port 3000...");
+    console.log("Server running on port 3000... and keys are " + LIST_ID + "   " + API_KEY);
 });
 
-
-//API KEY
-// acc2946992c7f2aa3631e3e11650fd0c-us21
-
-//LIST ID
-//71f24ed5e8
